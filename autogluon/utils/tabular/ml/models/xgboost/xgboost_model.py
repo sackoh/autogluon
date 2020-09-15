@@ -1,5 +1,7 @@
 import os
 import logging
+
+from .xgboost_utils import OheFeatureGenerator
 from ..abstract.abstract_model import AbstractModel
 from ...constants import BINARY, MULTICLASS, REGRESSION, SOFTCLASS, PROBLEM_TYPES_CLASSIFICATION
 
@@ -9,6 +11,7 @@ logger = logging.getLogger(__name__)
 class XGBoostModel(AbstractModel):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self._onehot_generator = None
 
     def _set_default_params(self):
         default_params = {
@@ -24,7 +27,16 @@ class XGBoostModel(AbstractModel):
         return spaces
 
     def preprocess(self, X, is_train=False):
-        X = super().preprocess(X)
+        X = super().preprocess(X=X)
+
+        if self._ohe_generator is None:
+            self._ohe_generator = OheFeatureGenerator()
+
+        if is_train:
+            self._onehot_generator.fit(X)
+
+        X = self._onehot_generator.transform(X)
+
         return X
 
     def _fit(self, X_train, y_train, **kwargs):
