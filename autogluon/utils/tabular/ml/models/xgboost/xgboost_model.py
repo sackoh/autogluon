@@ -2,6 +2,7 @@ import os
 import logging
 
 from .xgboost_utils import OheFeatureGenerator
+from .hyperparameters.parameters import get_param_baseline
 from ..abstract.abstract_model import AbstractModel
 from ...constants import BINARY, MULTICLASS, REGRESSION, SOFTCLASS, PROBLEM_TYPES_CLASSIFICATION
 
@@ -14,10 +15,7 @@ class XGBoostModel(AbstractModel):
         self._ohe_generator = None
 
     def _set_default_params(self):
-        default_params = {
-            'n_estimators': 1000,
-            'n_jobs': -1,
-        }
+        default_params = get_param_baseline(problem_type=self.problem_type, num_classes=self.num_classes)
         for param, val in default_params.items():
             self._set_default_param_value(param, val)
 
