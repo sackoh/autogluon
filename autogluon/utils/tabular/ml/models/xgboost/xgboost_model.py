@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class XGBoostModel(AbstractModel):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._onehot_generator = None
+        self._ohe_generator = None
 
     def _set_default_params(self):
         default_params = {
@@ -33,9 +33,9 @@ class XGBoostModel(AbstractModel):
             self._ohe_generator = OheFeatureGenerator()
 
         if is_train:
-            self._onehot_generator.fit(X)
+            self._ohe_generator.fit(X)
 
-        X = self._onehot_generator.transform(X)
+        X = self._ohe_generator.transform(X)
 
         return X
 
@@ -47,3 +47,21 @@ class XGBoostModel(AbstractModel):
         params = self.params.copy()
         self.model = model_type(**params)
         self.model.fit(X_train, y_train)
+
+    def get_model_feature_importance(self):
+        original_feature_names: list = self._ohe_generator.get_original_feature_names()
+        feature_names = self._ohe_generator.get_feature_names()
+        importances = self.model.feature_importances_.tolist()
+
+        importance_dict = {}
+        for original_feature in original_feature_names:
+            importance_dict[original_feature] = 0
+            for feature, value in zip(feature_names, importances):
+                if feature in self._ohe_generator.othercols:
+                    importance_dict[feature] = value
+                else:
+                    feature = '_'.join(feature.split('_')[:-1])
+                    if feature == original_feature:
+                        importance_dict[feature] += value
+
+        return importance_dict

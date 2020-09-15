@@ -51,3 +51,6 @@ class OheFeatureGenerator(BaseEstimator, TransformerMixin):
 
     def get_feature_types(self):
         return list(self._feature_map.values())
+
+    def get_original_feature_names(self):
+        return self.other_cols + self.cat_cols
