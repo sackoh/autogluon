@@ -15,6 +15,7 @@ from ...models.rf.rf_model import RFModel
 from ...models.knn.knn_model import KNNModel
 from ...models.catboost.catboost_model import CatboostModel
 from ...models.xt.xt_model import XTModel
+from ...models.xgboost.xgboost_model import XGBoostModel
 from ....metrics import soft_log_loss, mean_squared_error
 
 logger = logging.getLogger(__name__)
@@ -28,6 +29,7 @@ DEFAULT_MODEL_PRIORITY = dict(
     CAT=60,
     NN=50,
     LR=40,
+    XGB=30,
     custom=0,
 )
 
@@ -50,6 +52,7 @@ MODEL_TYPES = dict(
     NN=TabularNeuralNetModel,
     LR=LinearModel,
     FASTAI=NNFastAiTabularModel,
+    XGB=XGBoostModel,
 )
 
 DEFAULT_MODEL_NAMES = {
@@ -61,6 +64,7 @@ DEFAULT_MODEL_NAMES = {
     TabularNeuralNetModel: 'NeuralNet',
     LinearModel: 'LinearModel',
     NNFastAiTabularModel: 'FastAINeuralNet',
+    XGBoostModel: 'XGBoost',
 }
 
 
