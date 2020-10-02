@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.sparse import hstack
+from scipy.sparse import hstack, csr_matrix
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import OneHotEncoder
 
@@ -125,9 +125,11 @@ class OheFeatureGenerator(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X, y=None):
-        X_list = [self.ohe_encs[c].transform(self._normalize(X[c])) for c in self.cat_cols]
-        X_list.append(X[self.other_cols])
-
+        X_list = []
+        if self.cat_cols:
+            X_list = [csr_matrix(self.ohe_encs[c].transform(self._normalize(X[c]))) for c in self.cat_cols]
+        if self.other_cols:
+            X_list.append(csr_matrix(X[self.other_cols]))
         return hstack(X_list, format="csr")
 
     def _normalize(self, col):

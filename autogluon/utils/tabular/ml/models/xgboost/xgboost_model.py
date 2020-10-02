@@ -48,11 +48,12 @@ class XGBoostModel(AbstractModel):
     def _fit(self, X_train, y_train, X_val=None, y_val=None, time_limit=None, **kwargs):
         start_time = time.time()
         params = self.params.copy()
+        params['n_jobs'] = -1
         
         verbosity = kwargs.get('verbosity', 2)
         if verbosity <= 2:
             verbose = False
-        elif verbosity == 3:
+        elif verbosity >= 3:
             verbose = True
         
         X_train = self.preprocess(X_train, is_train=True)

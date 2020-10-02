@@ -20,8 +20,7 @@ def get_searchspace_multiclass_baseline(num_classes):
     params = {
         'objective': 'multi:softmax',
         'num_class': num_classes,
-        'n_estimator': DEFAULT_NUM_BOOST_ROUND,
-        'n_jobs': -1,
+        'n_estimators': DEFAULT_NUM_BOOST_ROUND,
         'booster': 'gbtree',
         'learning_rate': Real(lower=5e-3, upper=0.2, default=0.1, log=True),
         'max_depth': Int(lower=3, upper=10, default=3),
@@ -38,8 +37,7 @@ def get_searchspace_multiclass_baseline(num_classes):
 def get_searchspace_binary_baseline():
     params = {
         'objective': 'binary:logistic',
-        'n_estimator': DEFAULT_NUM_BOOST_ROUND,
-        'n_jobs': -1,
+        'n_estimators': DEFAULT_NUM_BOOST_ROUND,
         'booster': 'gbtree',
         'learning_rate': Real(lower=5e-3, upper=0.2, default=0.1, log=True),
         'max_depth': Int(lower=3, upper=10, default=3),
@@ -56,8 +54,7 @@ def get_searchspace_binary_baseline():
 def get_searchspace_regression_baseline():
     params = {
         'objective': 'reg:squarederror',
-        'n_estimator': DEFAULT_NUM_BOOST_ROUND,
-        'n_jobs': -1,
+        'n_estimators': DEFAULT_NUM_BOOST_ROUND,
         'booster': 'gbtree',
         'learning_rate': Real(lower=5e-3, upper=0.2, default=0.1, log=True),
         'max_depth': Int(lower=3, upper=10, default=3),
