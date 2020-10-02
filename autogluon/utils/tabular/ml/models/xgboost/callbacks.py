@@ -138,7 +138,7 @@ def early_stop_custom(stopping_rounds, start_time=None, time_limit=None, maximiz
             available_mb = available >> 20
 
             model_size_memory_ratio = estimated_model_size_mb / available_mb
-            if verbose or (model_size_memory_ratio > 0.25):
+            if verbose and (model_size_memory_ratio > 0.25):
                 rabit.tracker_print(f'Available Memory: {available_mb} MB\n')
                 rabit.tracker_print(f'Estimated XGB model size: {estimated_model_size_mb} MB\n')
 

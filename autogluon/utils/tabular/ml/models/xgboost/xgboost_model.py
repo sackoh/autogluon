@@ -5,6 +5,7 @@ import logging
 from . import xgboost_utils
 from .callbacks import early_stop_custom
 from .hyperparameters.parameters import get_param_baseline
+from .hyperparameters.searchspaces import get_default_searchspace
 from ..abstract.abstract_model import AbstractModel
 from ...constants import BINARY, MULTICLASS, REGRESSION, SOFTCLASS, PROBLEM_TYPES_CLASSIFICATION
 
@@ -21,11 +22,10 @@ class XGBoostModel(AbstractModel):
         for param, val in default_params.items():
             self._set_default_param_value(param, val)
 
-    # TODO: Enable HPO for XGBoost
     def _get_default_searchspace(self):
-        spaces = {}
-        return spaces
+        return get_default_searchspace(problem_type=self.problem_type, num_classes=self.num_classes)
 
+    # Use specialized XGBoost metric if available (fast), otherwise use custom func generator
     def get_eval_metric(self):
         eval_metric = xgboost_utils.convert_ag_metric_to_xgbm(ag_metric_name=self.stopping_metric.name, problem_type=self.problem_type)
         if eval_metric is None:
